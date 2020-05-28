@@ -27,7 +27,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		<style>
 			.lady-in img{
 				height: 248.52px;
-				width: 368.56px;
+				width: 366px;
 			}
 		</style>
 		<!--fonts-->
@@ -37,13 +37,13 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		<!--//fonts-->
 	</head>
 
-	<body>
+	<body >
 		<!--header-->
 		<div class="header">
 			<div class="header-top">
 				<div class="container">
 					<div class="header-grid">
-						<a href="index.html"><img src="images/logo.png" / style="height: 62px;"></a>
+						<a href="index.html"><img src="images/logo.png" style="height: 62px;"></a>
 					</div>
 					<div class="header-grid-right">
 						<a href="login.html" class="sign-up" style="float: right;">卡卡西</a>
@@ -51,7 +51,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					<div class="clearfix"> </div>
 				</div>
 			</div>
-			<div class="container">
+			<div class="container" >
 				<div class="header-bottom-bottom">
 					<div class="top-nav">
 						<span class="menu"> </span>
@@ -71,18 +71,13 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
 						<div class="clearfix"> </div>
 					</div>
-					<div class="search">
-						<form>
-							<input type="text" value="搜索" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '';}">
-							<input type="submit" value="">
-						</form>
-					</div>
+
 					<div class="clearfix"> </div>
 				</div>
 			</div>
 		</div>
 		<!--content-->
-		<div class="content">
+		<div class="content" id="main">
 			<div class="container">
 				<div class="women-in">
 					<div class="col-md-12" style="padding: 0px;">
@@ -92,42 +87,21 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						</div>
 						<div class="in-line" style="padding: 0;">
 							<div class="para-an">
-								<h3>所有点卡</h3>
-								<p>搜索所有点卡</p>
+								<h3 style="width: 300px">所有点卡</h3>
+								<p style="width: 300px">搜索所有点卡</p>
+								<div class="search" style="float: right">
+									<form>
+										<input type="text"  v-model="params.tName">
+										<input type="submit" @click="selectCardUse()">
+									</form>
+								</div>
 							</div>
-							<div class="lady-in">
-								<div class="col-md-4 you-para">
+							<div class="lady-in" >
+								<div class="col-md-4 you-para" v-for="(data,index) in dataList">
 									<a href="buypage.html"><img class="img-responsive pic-in" src="images/骏网一卡通.png" alt=" "></a>
-									<p>骏网一卡通200元</p>
-									<span>&yen;185.00  | <a href="buypage.html">马上购买 </a></span>
+									<p>{{data.tname}}</p>
+									<span>&yen;{{data.cprice}}  | <a href="buypage.html">马上购买 </a></span>
 								</div>
-								<div class="col-md-4 you-para">
-									<a href="buypage.html"><img class="img-responsive pic-in" src="images/骏网一卡通.png" alt=" "></a>
-									<p>骏网一卡通1元</p>
-									<span>&yen;0.95  | <a href="buypage.html">马上购买 </a></span>
-								</div>
-								<div class="col-md-4 you-para para-grid">
-									<a href="buypage.html"><img class="img-responsive pic-in" src="images/盛大一卡通.png" alt=" "></a>
-									<p>盛大一卡通50元</p>
-									<span>&yen;47.00  | <a href="buypage.html">马上购买 </a></span>
-								</div>
-
-								<div class="col-md-4 you-para">
-									<a href="buypage.html"><img class="img-responsive pic-in" src="images/网易一卡通.png" alt=" "></a>
-									<p>网易一卡通200元</p>
-									<span>&yen;185.00  | <a href="buypage.html">马上购买 </a></span>
-								</div>
-								<div class="col-md-4 you-para">
-									<a href="buypage.html"><img class="img-responsive pic-in" src="images/冒泡一卡通.png" alt=" "></a>
-									<p>冒泡一卡通30元</p>
-									<span>&yen;27.50  | <a href="buypage.html">马上购买 </a></span>
-								</div>
-								<div class="col-md-4 you-para para-grid">
-									<a href="buypage.html"><img class="img-responsive pic-in" src="images/网易一卡通.png" alt=" "></a>
-									<p>网易一卡通100元</p>
-									<span>&yen;93.00  | <a href="buypage.html">马上购买 </a></span>
-								</div>
-								<div class="clearfix"> </div>
 							</div>
 						</div>
 					</div>
@@ -136,34 +110,13 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				<!---->
 				<div class="pages">
 					<div class="limiter visible-desktop">
-						<label>总 50 页 共 347 条结果</label>
+						<label>总  页 共  条结果</label>
 					</div>
-					<ul class="dc_pagination dc_paginationA dc_paginationA06">
-						<li>
-							<a href="#" class="current1"></a>
-						</li>
-						<li>
-							<a href="#">1</a>
-						</li>
-						<li>
-							<a href="#">2</a>
-						</li>
-						<li>
-							<a href="#">3</a>
-						</li>
-						<li>
-							<a href="#">4</a>
-						</li>
-						<li>
-							<a href="#">5</a>
-						</li>
-						<li>
-							<a href="#" class="current"></a>
-						</li>
+					<ul id="page">
+
 					</ul>
-					<div class="clearfix"></div>
 				</div>
-				<div class="clearfix"></div>
+
 
 			</div>
 		</div>
@@ -184,5 +137,74 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		</div>
 
 	</body>
+	<!--引入vue.js-->
+	<script src="js/vue.min.js"></script>
+	<!--引入分页插件js-->
+	<script src="js/bootstrap-paginator.js"></script>
+	<script>
+		var vm = new Vue({
+			el:"#main",
+			data:{
+				params:{
+					tName:'',
+					pageSize:6,
+					currentPage:1,//当前页
+					pages:1
+				},
+				dataList:[]
+
+			},
+			//页面初始化加载的方法
+			mounted:function () {
+				// this.adminInfo = JSON.parse(window.sessionStorage.getItem("admin"));
+				// console.log(this.adminInfo)
+				// if (this.adminInfo == null) {
+				// 	alert("请先登陆!");
+				// 	window.location.href = "login.html";
+				// }
+				//初始化分页模板
+				var options = {
+					bootstrapMajorVersion:3,
+					currentPage:this.params.currentPage,//当前页数
+					numberOfPages:5,//显示分页按钮的数量
+					totalPages:this.params.pages,//总页数
+					onPageClicked:function (event,originalEvent,type,page) {
+						vm.params.currentPage=page;
+						vm.selectCardUse();
+					},
+					onPageChanged:function(event, oldPage, newPage){
+						vm.params.currentPage=newPage;
+						vm.selectCardUse();
+					}
+				};
+				$("#page").bootstrapPaginator(options);
+
+				this.selectCardUse();
+
+			},
+			methods:{
+				selectCardUse:function(){
+					var url = "http://localhost:8000/card/selectCardUse";
+					$.get(url,this.params,function (data) {
+						if (data.code === 0){
+							console.log(data); //打印结果到控制台
+							vm.dataList = data.dataList; //结果
+							vm.params.pages = data.pages;//总页数
+							vm.params.currentPage = data.pageNum //第几页
+							//设置分页(当前页,总页数)
+							console.log(data.total);
+							$("#page").bootstrapPaginator('setOptions',{currentPage:vm.params.currentPage,totalPages:vm.params.pages});
+						}else {
+							alert(data.msg);
+						}
+					});
+				}
+
+			}
+
+
+		});
+
+	</script>
 
 </html>
