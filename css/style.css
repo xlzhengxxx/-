@@ -208,7 +208,18 @@ a.sign-up:hover{
 	position: absolute;
 	outline: none;
 	margin: 1px 0px 0px 6px;
-}	
+}
+.search input[type="button"] {
+    width: 20px;
+    height: 20px;
+    background:url(../images/img-sprite.png) 0px 0px;
+    padding: 0px 10px;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    outline: none;
+    margin: 1px 0px 0px 6px;
+}
 /*--content--*/
 .col-d{
 	width: 71%;
@@ -1351,6 +1362,7 @@ padding: 2em;
 	padding: 0.5em;
 	margin: 0.5em 0;
 }
+
 .checkbox {
 	margin-bottom: 4px;
 	padding-left: 27px;

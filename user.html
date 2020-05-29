@@ -9,6 +9,7 @@
 		<!-- Custom Theme files -->
 		<!--theme-style-->
 		<link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
+		<link rel="stylesheet" href="css\model.css" type="text/css">
 		<!--//theme-style-->
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -37,7 +38,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			<div class="header-top">
 				<div class="container">
 					<div class="header-grid">
-						<a href="index.html"><img src="images/logo.png" / style="height: 62px;"></a>
+						<a href="index.html"><img src="images/logo.png" style="height: 62px;"></a>
 					</div>
 					<div class="clearfix"> </div>
 				</div>
@@ -67,29 +68,55 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			</div>
 		</div>
 		<!--content-->
-		<div class="content">
+		<div class="content" id="main">
 			<div class="container">
 				<div class="register" style="width: 400px;margin: auto ;">
 					<form>
 						<div class="  register-top-grid" style="margin: 0 0 5em;">
 							<h2 style="margin-bottom: 25px;text-align: center;color: #E74C3C;">个人信息</h2>
 							<div class="mation" style="border-style: solid;border-width: 1px;border-color: #31B0D5;">
-								<span style="width:300px;float: right;font-size: 18px;">卡卡西</span>
+								<span style="width:300px;float: right;font-size: 18px;">{{userEntity.uname}}</span>
 								<span style="font-size: 18px;margin-left: 20px;">用户名&nbsp;&nbsp;|</span>
-								<span style="width:300px;float: right;font-size: 18px;">kkx123456</span>
+								<span style="width:300px;float: right;font-size: 18px;">{{userEntity.unumber}}</span>
 								<span style="font-size: 18px;margin-left: 20px">账&nbsp;&nbsp;&nbsp;&nbsp;号&nbsp;&nbsp;|</span>
-								<span style="width:300px;float: right;font-size: 18px;">123456@qq.com</span>
+								<span style="width:300px;float: right;font-size: 18px;">{{userEntity.uemail}}</span>
 								<span style="font-size: 18px;margin-left: 20px">邮&nbsp;&nbsp;&nbsp;&nbsp;箱&nbsp;&nbsp;|</span>
-								<span style="width:300px;float: right;font-size: 18px;">15112345464</span>
+								<span style="width:300px;float: right;font-size: 18px;">{{userEntity.uphone}}</span>
 								<span style="font-size: 18px;margin-left: 20px">电&nbsp;&nbsp;&nbsp;&nbsp;话&nbsp;&nbsp;|</span>
 							</div>
 							<div class="clearfix"> </div>
 						</div>
 						<div style="text-align: center;margin-bottom: 4.2em;">
-							<a href="#" class="to-cart" style="margin-right:1em ;"><span >编辑</span></a>
+							<a href="#" class="to-cart" style="margin-right:1em ;" id="showModel" @click="updateUser(userInfo)"><span >编辑</span></a>
 							<a href="#" class="to-cart"><span>修改密码</span></a>
 						</div>
-						
+						<div id="modal" class="modal">
+							<div class="modal-content">
+								<header class="modal-header"><h4>修改资料</h4><span class="close">×</span></header>
+								<div class="modal-body">
+									<div style="float: left">
+										<span>用户名：</span>
+										<input type="text" v-model="update.uname">
+									</div>
+									<div style="float: left">
+										<span>账&nbsp;&nbsp;&nbsp; 号：</span>
+										<input type="text" v-model="update.unumber">
+									</div>
+									<div style="float: left">
+										<span>邮&nbsp;&nbsp;&nbsp; 箱：</span>
+										<input type="text" v-model="update.uemail">
+									</div>
+									<div style="float: left">
+										<span>电&nbsp;&nbsp;&nbsp; 话：</span>
+										<input type="text" v-model="update.uphone">
+									</div>
+								</div>
+								<footer class="modal-footer">
+									<button id="cancel">取消</button>
+									<button id="sure" @click="saveUpdate()">确定</button>
+								</footer>
+							</div>
+						</div>
 					</form>
 				</div>
 			</div>
@@ -110,6 +137,129 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			</div>
 		</div>
 
+
+
+
 	</body>
+	<!--引入vue.js-->
+	<script src="js/vue.min.js"></script>
+	<!--引入分页插件js-->
+	<script src="js/bootstrap-paginator.js"></script>
+	<script>
+		var vm = new Vue({
+			el:"#main",
+			data:{
+				params:{
+					uId:1
+				},
+				userInfo:{},
+				//修改所需参数
+				update:{
+					uid:null,
+					uname:"",
+					unumber:"",
+					upassword:null,
+					uemail:"",
+					uphone:"",
+					ustate:1,
+					udate:null
+				},
+				//修改密码所需参数
+				updatepwd:{
+					uid:null,
+					uname:null,
+					unumber:null,
+					upassword:"",
+					uemail:null,
+					uphone:null,
+					ustate:1,
+					udate:null
+				},
+				dataList:[],
+				userEntity:{}
+
+			},
+			//页面初始化加载的方法
+			mounted:function () {
+				this.userInfo = JSON.parse(window.sessionStorage.getItem("user"));
+				console.log(this.userInfo);
+				this.selectUser();
+
+			},
+			methods:{
+				selectUser:function(){
+					var url = "http://localhost:8000/users/selectUserById";
+					this.params.uId = this.userInfo.uid;
+					$.get(url,this.params,function (data) {
+						if (data.code === 0){
+							console.log(data); //打印结果到控制台
+							vm.userEntity = data.usersEntity;
+						}else {
+							alert(data.msg);
+						}
+					});
+				},
+				updateUser:function (userEntity) {
+					console.log(userEntity);
+					vm.update.uid = userEntity.uid;
+					vm.update.uname = userEntity.uname;
+					vm.update.unumber = userEntity.unumber;
+					vm.update.upassword = userEntity.upassword;
+					vm.update.uemail = userEntity.uemail;
+					vm.update.uphone = userEntity.uphone;
+					vm.update.ustate = userEntity.ustate;
+				},
+				saveUpdate:function(){
+					$.ajax({
+						type: "POST",
+						url:"http://localhost:8000/users/updateUsers",
+						dataType:"json",
+						contentType: "application/json",
+						data:JSON.stringify(vm.update),
+						success:function (data) {
+							if (data.code === 0){
+
+								alert(data.msg);
+							}else {
+								alert(data.msg);
+							}
+							window.location.reload();
+						}
+
+					});
+				},
+				logout:function () {
+					var flag = confirm("您确定要退出登录吗？")
+					if(flag){
+						sessionStorage.clear()
+						window.location.href = "login.html";
+					}
+				}
+
+			}
+
+
+		});
+
+	</script>
+	<script>
+		var btn = document.getElementById('showModel');
+		var close = document.getElementsByClassName('close')[0];
+		var cancel = document.getElementById('cancel');
+		var modal = document.getElementById('modal');
+		var sure = document.getElementById('sure');
+		btn.addEventListener('click', function () {
+			modal.style.display = "block";
+		});
+		close.addEventListener('click', function () {
+			modal.style.display = "none";
+		});
+		cancel.addEventListener('click', function () {
+			modal.style.display = "none";
+		});
+		sure.addEventListener('click', function () {
+			modal.style.display = "none";
+		});
+	</script>
 
 </html>

@@ -38,6 +38,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	</head>
 
 	<body >
+    <div id="main">
 		<!--header-->
 		<div class="header">
 			<div class="header-top">
@@ -46,7 +47,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						<a href="index.html"><img src="images/logo.png" style="height: 62px;"></a>
 					</div>
 					<div class="header-grid-right">
-						<a href="login.html" class="sign-up" style="float: right;">卡卡西</a>
+                        <a v-if="this.userInfo != null" href="" class="sign-up" style="float: right;" @click="logout()">退出登录</a>
+                        <a v-if="this.userInfo != null" href="user.html" class="sign-up" style="float: right;" >{{userInfo.uname}}</a>
+
+						<a v-else="" href="login.html" class="sign-up" style="float: right;">请登录</a>
 					</div>
 					<div class="clearfix"> </div>
 				</div>
@@ -63,6 +67,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 								<a href="orders.html">我的订单</a>
 							</li>
 						</ul>
+
 						<script>
 							$("span.menu").click(function() {
 								$(".top-nav ul").slideToggle(500, function() {});
@@ -77,45 +82,39 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			</div>
 		</div>
 		<!--content-->
-		<div class="content" id="main">
-			<div class="container">
+		<div class="content" >
+			<div class="container"  >
 				<div class="women-in">
 					<div class="col-md-12" style="padding: 0px;">
 						<!---->
-						<div class="tlinks">Collect from
-							<a href="http://www.cssmoban.com/" title="网站模板">网站模板</a>
-						</div>
+
 						<div class="in-line" style="padding: 0;">
-							<div class="para-an">
+							<div class="para-an"  >
 								<h3 style="width: 300px">所有点卡</h3>
 								<p style="width: 300px">搜索所有点卡</p>
-								<div class="search" style="float: right">
-									<form>
-										<input type="text"  v-model="params.tName">
-										<input type="submit" @click="selectCardUse()">
-									</form>
-								</div>
+
 							</div>
+                                    <input  placeholder="请输入点卡名称" v-model="params.tName">
+                                    <input  placeholder="请输入点卡面值" v-model="params.mName">
+                                    <button  @click="selectCardUse()">查询</button>
 							<div class="lady-in" >
 								<div class="col-md-4 you-para" v-for="(data,index) in dataList">
 									<a href="buypage.html"><img class="img-responsive pic-in" src="images/骏网一卡通.png" alt=" "></a>
-									<p>{{data.tname}}</p>
-									<span>&yen;{{data.cprice}}  | <a href="buypage.html">马上购买 </a></span>
+									<p>{{data.tname}}{{data.mname}}</p>
+									<span>&yen;{{data.cprice}}  | <a href="buypage.html" @click="buyPage">马上购买</a></span>
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="clearfix"> </div>
+                    <div class="pages">
+                        <ul id="page">
+
+                        </ul>
+                    </div>
 				</div>
 				<!---->
-				<div class="pages">
-					<div class="limiter visible-desktop">
-						<label>总  页 共  条结果</label>
-					</div>
-					<ul id="page">
 
-					</ul>
-				</div>
 
 
 			</div>
@@ -135,7 +134,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				</div>
 			</div>
 		</div>
-
+    </div>
 	</body>
 	<!--引入vue.js-->
 	<script src="js/vue.min.js"></script>
@@ -145,8 +144,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		var vm = new Vue({
 			el:"#main",
 			data:{
+                userInfo:{},
 				params:{
 					tName:'',
+                    mName:'',
 					pageSize:6,
 					currentPage:1,//当前页
 					pages:1
@@ -156,12 +157,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			},
 			//页面初始化加载的方法
 			mounted:function () {
-				// this.adminInfo = JSON.parse(window.sessionStorage.getItem("admin"));
-				// console.log(this.adminInfo)
-				// if (this.adminInfo == null) {
-				// 	alert("请先登陆!");
-				// 	window.location.href = "login.html";
-				// }
+				this.userInfo = JSON.parse(window.sessionStorage.getItem("user"));
+				//console.log(this.userInfo)
+
 				//初始化分页模板
 				var options = {
 					bootstrapMajorVersion:3,
@@ -187,18 +185,43 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					var url = "http://localhost:8000/card/selectCardUse";
 					$.get(url,this.params,function (data) {
 						if (data.code === 0){
-							console.log(data); //打印结果到控制台
+							//console.log(data); //打印结果到控制台
 							vm.dataList = data.dataList; //结果
 							vm.params.pages = data.pages;//总页数
 							vm.params.currentPage = data.pageNum //第几页
 							//设置分页(当前页,总页数)
-							console.log(data.total);
+							//console.log(data.total);
+                            console.log(vm.params.tName)
 							$("#page").bootstrapPaginator('setOptions',{currentPage:vm.params.currentPage,totalPages:vm.params.pages});
 						}else {
 							alert(data.msg);
 						}
 					});
-				}
+				},
+                buyPage:function(){
+                    var url = "http://localhost:8000/card/selectCardUse/";
+                    $.get(url,this.params,function (data) {
+                        if (data.code === 0){
+                            console.log(data); //打印结果到控制台
+                            vm.dataList = data.dataList; //结果
+                            vm.params.pages = data.pages;//总页数
+                            vm.params.currentPage = data.pageNum //第几页
+                            //设置分页(当前页,总页数)
+                            //console.log(data.total);
+                            console.log(vm.params.tName)
+                            $("#page").bootstrapPaginator('setOptions',{currentPage:vm.params.currentPage,totalPages:vm.params.pages});
+                        }else {
+                            alert(data.msg);
+                        }
+                    });
+                },
+                logout:function () {
+                    var flag = confirm("您确定要退出登录吗？")
+                    if(flag){
+                        sessionStorage.clear()
+                        window.location.href = "login.html";
+                    }
+                }
 
 			}
 

@@ -62,18 +62,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
 						<div class="clearfix"> </div>
 					</div>
-					<div class="search">
-						<form>
-							<input type="text" value="搜索" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '';}">
-							<input type="submit" value="">
-						</form>
-					</div>
 					<div class="clearfix"> </div>
 				</div>
 			</div>
 		</div>
 		<!--content-->
-		<div class="content">
+		<div class="content" id="main">
 			<div class="container">
 				<div class="register">
 					<form>
@@ -81,16 +75,16 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							<h2 style="margin-bottom: 25px;align-self: center;">用户登录</h2>
 							<div class="mation">
 								<span style="font-size: 18px;">账号<label>*</label></span>
-								<input type="text" placeholder="请输入正确账号...">
+								<input type="text" placeholder="请输入正确账号..." v-model="login.unumber">
 
 								<span style="font-size: 18px;">密码<label>*</label></span>
-								<input type="text" placeholder="请输入正确密码...">
+								<input type="text" placeholder="请输入正确密码..." v-model="login.upassword">
 							</div>
 							<div class="clearfix"> </div>
 							<span style="margin:1em 0 3.5em 0;">没有账号？<a href="zhuce.html"style="color: #31B0D5;">加入我们
 							</a></span>
 						</div>
-						<a href="#" class="to-cart" ><span style="margin: 3em 0;">登录</span></a>
+						<a href="#" class="to-cart" @click="loginss()"><span style="margin: 3em 0;">登录</span></a>
 					</form>
 				</div>
 			</div>
@@ -112,5 +106,42 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		</div>
 
 	</body>
+	<!--引入vue.js-->
+	<script src="js/vue.min.js"></script>
+	<!--引入分页插件js-->
+	<script src="js/bootstrap-paginator.js"></script>
+<script>
+	var vm = new Vue({
+		el:"#main",
+		data:{
+			//登录所需参数
+			login:{
+				unumber:"",
+				upassword:""
+			},
+			dataList:[],//保存请求到的数据（是一个list）
+		},
+		//页面单击事件
+		methods: {
+			//管理员登录
+			loginss:function () {
+				var url = "http://localhost:8000/users/login";
+				args = {
+					"uNumber":vm.login.unumber,
+					"uPassword":vm.login.upassword
+				};
+				$.post(url,args,function (data) {
+					if (data.code === 0){
+						window.sessionStorage.setItem("user",JSON.stringify(data.usersEntity))
+						window.location.href = "index.html";
+					}else {
+						alert(data.msg);
+					}
+				})
+			}
+		}
+
+	});
+</script>
 
 </html>
